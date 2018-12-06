@@ -1,11 +1,14 @@
-package com.example.avalon;
+package com.example;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Conditional;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
+
 
 @SpringBootApplication
-    public class AvalonApplication {
+//@EnableSwagger2
+public class AvalonApplication {
+
 
     public static void main(String[] args) {
         SpringApplication.run(AvalonApplication.class, args);
