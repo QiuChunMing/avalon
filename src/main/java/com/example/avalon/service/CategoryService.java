@@ -8,41 +8,46 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 @Slf4j
 public class CategoryService {
 
+
+    static final int ROOT_ID = 0;
+
     @Autowired
     private CategoryRepository categoryRepository;
 
     public ServiceResult<List<CategoryVO>> getCategories() {
-        List<Category> mainCategories = categoryRepository.findAllByLevel(1);
-        List<Category> allSubCategories = categoryRepository.findAllByLevel(2);
-
-        log.debug(mainCategories.toString());
-        log.debug(allSubCategories.toString());
 
         List<CategoryVO> categories = new ArrayList<>();
 
+        List<Category> all = categoryRepository.findAll();
+        Map<Integer, Map<Integer, List<Category>>> map = all.stream().collect(
+                Collectors.groupingBy(Category::getLevel,
+                        Collectors.groupingBy(Category::getParentId)));
+
+        int maxLevel = map.size();
+        List<Integer> ids = new ArrayList<>();
+        List<Category> list = map.get(1).get(0);
+        //添加第一个类别（总的类别）
         CategoryVO firstCatogery = new CategoryVO();
         firstCatogery.setName("全部商家");
-        firstCatogery.setIds(mainCategories.stream()
-                .map(c -> c.getId())
-                .collect(Collectors.toList()));
-
+        firstCatogery.setIds(map.get(1).get(0).stream()
+                .map(Category::getId).collect(Collectors.toList()));
         categories.add(firstCatogery);
 
-        //对二级菜单根据父级菜单进行分类
-        Map<Integer, List<Category>> collect = allSubCategories.stream()
-                .collect(Collectors.groupingBy(Category::getParentId));
+        //TODO
+        List<Category> mainCategories = map.get(1).get(ROOT_ID);
 
-        collect.forEach((i,j)->log.debug("collect {} :{}",i,String.valueOf(j.size())));
+
+        //对二级菜单根据父级菜单进行分类
+        Map<Integer, List<Category>> collect = map.get(2);
+
+        collect.forEach((i, j) -> log.debug("collect {} :{}", i, String.valueOf(j.size())));
         //按照一级菜单Id,顺序取出分类后的二级菜单
         for (Category mainCategory : mainCategories) {
             CategoryVO subCategoryVO = new CategoryVO();
@@ -54,16 +59,20 @@ public class CategoryService {
             //将二级菜单Entity转换为VO
             List<Category> subCategories = collect.get(mainCategoryId);
             List<CategoryVO> subCategoriesVO = new ArrayList<>();
-            for (Category subCategory : subCategories) {
-                CategoryVO categoryVO = new CategoryVO();
-                BeanUtils.copyProperties(subCategory,categoryVO);
-                subCategoriesVO.add(categoryVO);
-            }
+            wrapCategoryToVO(subCategories, subCategoriesVO);
 
             subCategoryVO.setSub_categories(subCategoriesVO);
             categories.add(subCategoryVO);
         }
 
         return ServiceResult.of(categories);
+    }
+
+    private void wrapCategoryToVO(List<Category> categories, List<CategoryVO> categoryVOS) {
+        for (Category category : categories) {
+            CategoryVO categoryVO = new CategoryVO();
+            BeanUtils.copyProperties(category, categoryVO);
+            categoryVOS.add(categoryVO);
+        }
     }
 }
