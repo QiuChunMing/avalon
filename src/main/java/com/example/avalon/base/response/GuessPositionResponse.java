@@ -1,14 +1,8 @@
 package com.example.avalon.base.response;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-@NoArgsConstructor
-@Data
-@ToString
 public class GuessPositionResponse {
 
 

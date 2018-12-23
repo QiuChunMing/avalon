@@ -22,10 +22,6 @@ public class Shop {
 
     private String address;
 
-    private String orderLeadTime;
-
-    private String distance;
-
     private String imagePath;
 
     private short isPremium;

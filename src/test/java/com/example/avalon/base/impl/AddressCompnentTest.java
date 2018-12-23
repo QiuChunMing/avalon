@@ -22,7 +22,7 @@ public class AddressCompnentTest {
 
     @Test
     public void guessPosition() {
-        addressCompnent.guessPosition(null);
+       log.debug("guess position is:{}",addressCompnent.guessPosition(null));
     }
 
     @Test
@@ -39,10 +39,16 @@ public class AddressCompnentTest {
 
     @Test
     public void searchPlace() {
-        SearchPlaceResponse searchPlaceResponse = addressCompnent.searchPlace("广东", "广州");
+        SearchPlaceResponse searchPlaceResponse = addressCompnent.searchPlace("广东", "");
         log.info("{}",searchPlaceResponse.getMessage());
 
         SearchPlaceResponse searchPlace = addressCompnent.searchPlace(null, null);
         Assert.assertNull(searchPlace);
+    }
+
+    @Test
+    public void getpois() {
+        GeocoderResponse response = addressCompnent.getpois(String.valueOf(31.22967), String.valueOf(121.4762));
+        log.debug("response is {}",response);
     }
 }

@@ -5,6 +5,8 @@ import lombok.Data;
 @Data
 public class APIResponse {
 
+    private String name;
+
     private long count;
 
     private int status;
