@@ -21,24 +21,16 @@ public class ProductInfo {
     @Id
     @GeneratedValue
     private String productId;
-
     private String productName;
-
     private double productPrice;
-
     private int productStack;
-
     private String productDescription;
-
     /*商品图标*/
     private String productIcon;
-
     /*商品类目*/
     private String categoryType;
-
     /*创建时间*/
     private Date createTime;
-
     /*修改时间*/
     private Date updateTime;
 

@@ -1,6 +1,7 @@
 package com.example.avalon.service;
 
 import com.example.AvalonApplication;
+import com.example.avalon.AvalonApplicationTests;
 import com.example.avalon.entity.Category;
 import com.example.avalon.repository.CategoryRepository;
 import com.example.avalon.dto.CategoryDTO;
@@ -20,10 +21,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.io.IOException;
 import java.util.List;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes = AvalonApplication.class)
+
 @Slf4j
-public class CategoryServiceTest {
+public class CategoryServiceTest extends AvalonApplicationTests {
 
     @Value("classpath:Categories.json")
     Resource resource;

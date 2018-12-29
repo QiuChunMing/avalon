@@ -1,8 +1,9 @@
-package com.example.avalon.service;
+package com.example.avalon.service.address;
 
-import com.example.avalon.base.AddressSearch;
-import com.example.avalon.base.response.GeocoderResponse;
-import com.example.avalon.base.response.SearchPlaceResponse;
+import com.example.avalon.service.ServiceResult;
+import com.example.avalon.service.address.IAddressService;
+import com.example.avalon.service.address.response.GeocoderResponse;
+import com.example.avalon.service.address.response.SearchPlaceResponse;
 import com.example.avalon.base.utils.IPUtils;
 import com.example.avalon.entity.Cities;
 import com.example.avalon.repository.CitiesRepository;
@@ -27,7 +28,7 @@ public class CitiesService {
     private CitiesRepository citiesRepository;
 
     @Autowired
-    private AddressSearch addressSearch;
+    private IAddressService IAddressService;
 
 
 
@@ -36,19 +37,18 @@ public class CitiesService {
     }
 
     public ServiceResult<Cities> cityGuess(String ip) {
-        GeocoderResponse geocoder = addressSearch.geocoder(ip);
-
-        if (geocoder != null && geocoder.getStatus() != 0) {
-            String cityName = geocoder.getResult().getAd_info().getCity().replace("市", "");
+        ServiceResult<GeocoderResponse> result = IAddressService.geocoder(ip);
+        if (result.isSuccess()) {
+            String cityName = result.getResult().getResult().getAd_info().getCity().replace("市", "");
             return getCityInfoByName(cityName);
         }
-        return ServiceResult.fail();
+        return new ServiceResult<>(false, result.getMessage());
     }
 
     public ServiceResult<List<Cities>> cityHot() {
         List<Cities> hotCity = citiesRepository.findByisHotCityTrue();
         if (hotCity == null) {
-            return ServiceResult.fail();
+            return new ServiceResult<>(false, "can not find hotCity");
         }
         return ServiceResult.of(hotCity);
     }
@@ -87,14 +87,15 @@ public class CitiesService {
             }
         }
         ServiceResult<Cities> cityInfo = getCityInfoById(cityId);
-        SearchPlaceResponse place;
+        ServiceResult<SearchPlaceResponse> result;
         List<PoisDTO> poisDTOS;
         if (cityInfo.isSuccess()) {
             poisDTOS = new ArrayList<>();
             PoisDTO poisDTO = new PoisDTO();
-            place = addressSearch.searchPlace(keyword, cityInfo.getResult().getName());
-            if (place!=null) {
-                for (SearchPlaceResponse.DataBean dataBean : place.getData()) {
+            result = IAddressService.searchPlace(keyword, cityInfo.getResult().getName());
+            if (result.isSuccess()) {
+                SearchPlaceResponse searchPlaceResponse = result.getResult();
+                for (SearchPlaceResponse.DataBean dataBean : searchPlaceResponse.getData()) {
                     poisDTO.setName(dataBean.getTitle());
                     poisDTO.setAddress(dataBean.getAddress());
                     poisDTO.setLatitude(dataBean.getLocation().getLat());
@@ -105,15 +106,16 @@ public class CitiesService {
             }
 
         } else {
-            return ServiceResult.fail();
+            return new ServiceResult<>(false,"cityId "+cityId+" can not be found");
         }
         log.debug("{}", poisDTOS);
         return ServiceResult.of(poisDTOS);
     }
 
     public ServiceResult<PoisHashDTO> poishash(String lat, String lng) {
-        GeocoderResponse geocoderResponse = addressSearch.getpois(lat,lng);
-        if (geocoderResponse != null && geocoderResponse.getStatus() == 0) {
+        ServiceResult<GeocoderResponse> geocoder = IAddressService.getpois(lat,lng);
+        if (geocoder.isSuccess()) {
+            GeocoderResponse geocoderResponse = geocoder.getResult();
             PoisHashDTO poisHashDTO = new PoisHashDTO();
             poisHashDTO.setCity(geocoderResponse.getResult().getAd_info().getCity());
             poisHashDTO.setAddress(geocoderResponse.getResult().getAddress());
@@ -123,7 +125,7 @@ public class CitiesService {
             poisHashDTO.setName(geocoderResponse.getResult().getFormatted_addresses().getRecommend());
             return ServiceResult.of(poisHashDTO);
         }
-        return ServiceResult.fail();
+        return new ServiceResult<>(false, geocoder.getMessage());
     }
 
 

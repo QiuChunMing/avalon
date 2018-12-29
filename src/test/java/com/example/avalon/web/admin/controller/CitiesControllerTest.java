@@ -1,6 +1,7 @@
 package com.example.avalon.web.admin.controller;
 
 import com.example.AvalonApplication;
+import com.example.avalon.AvalonApplicationTests;
 import com.example.avalon.entity.Cities;
 import com.example.avalon.repository.CitiesRepository;
 import com.example.avalon.dto.CitiesDTO;
@@ -26,9 +27,7 @@ import java.util.List;
 import java.util.Map;
 
 @Slf4j
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes = AvalonApplication.class)
-public class CitiesControllerTest {
+public class CitiesControllerTest extends AvalonApplicationTests {
 
     @Autowired
     private CitiesController citiesController;
@@ -77,7 +76,7 @@ public class CitiesControllerTest {
                     log.debug("city name {}",byName==null);
                     if (byName != null) {
                         byName.setHotCity(true);
-                        byName.setName("修改后"+byName.getName());
+                        byName.setName(byName.getName());
                         repository.save(byName);
                     }
                 }

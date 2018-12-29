@@ -2,7 +2,7 @@ package com.example.avalon.web.admin.controller;
 
 import com.example.avalon.entity.StatisEntity;
 import com.example.avalon.service.ServiceResult;
-import com.example.avalon.service.StatisService;
+import com.example.avalon.service.statis.StatisService;
 import com.example.avalon.web.APIResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

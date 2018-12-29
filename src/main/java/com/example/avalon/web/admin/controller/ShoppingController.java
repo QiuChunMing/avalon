@@ -1,7 +1,7 @@
 package com.example.avalon.web.admin.controller;
 
 import com.example.avalon.service.ServiceResult;
-import com.example.avalon.service.ShopService;
+import com.example.avalon.service.shop.ShopService;
 import com.example.avalon.web.form.AddShopForm;
 import com.example.avalon.dto.AddShopResponse;
 import com.example.avalon.dto.ShopDetail;

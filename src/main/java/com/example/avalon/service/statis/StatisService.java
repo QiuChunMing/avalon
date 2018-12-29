@@ -1,7 +1,8 @@
-package com.example.avalon.service;
+package com.example.avalon.service.statis;
 
 import com.example.avalon.entity.StatisEntity;
 import com.example.avalon.repository.StatisRepository;
+import com.example.avalon.service.ServiceResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

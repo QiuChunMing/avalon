@@ -1,6 +1,7 @@
 package com.example.avalon.base;
 
 import com.example.AvalonApplication;
+import com.example.avalon.service.address.AddressSuggestConfiguration;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;

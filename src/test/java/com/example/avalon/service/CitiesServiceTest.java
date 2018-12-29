@@ -1,8 +1,10 @@
 package com.example.avalon.service;
 
 import com.example.AvalonApplication;
+import com.example.avalon.AvalonApplicationTests;
 import com.example.avalon.entity.Cities;
 import com.example.avalon.repository.CitiesRepository;
+import com.example.avalon.service.address.CitiesService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -19,9 +21,8 @@ import java.io.IOException;
 import java.util.List;
 
 @Slf4j
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes = AvalonApplication.class)
-public class CitiesServiceTest {
+
+public class CitiesServiceTest extends AvalonApplicationTests {
 
     @Autowired
     private CitiesRepository citiesRepository;

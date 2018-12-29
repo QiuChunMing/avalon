@@ -1,4 +1,4 @@
-package com.example.avalon.base.response;
+package com.example.avalon.service.address.response;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.ToString;

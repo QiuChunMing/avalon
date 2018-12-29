@@ -1,4 +1,4 @@
-package com.example.avalon.base;
+package com.example.avalon.service.address;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

@@ -1,7 +1,7 @@
 package com.example.avalon.web.admin.controller;
 
 import com.example.avalon.entity.Cities;
-import com.example.avalon.service.CitiesService;
+import com.example.avalon.service.address.CitiesService;
 import com.example.avalon.service.ServiceResult;
 import com.example.avalon.dto.CitiesDTO;
 import com.example.avalon.dto.PoisHashDTO;
@@ -48,7 +48,7 @@ public class CitiesController {
             vo.setName("ERROR_DATA");
             vo.setMessage("查找数据失败");
         }
-        return vo;
+        return new CitiesDTO();
     }
 
     //获取所选城市信息
