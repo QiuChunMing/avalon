@@ -26,7 +26,8 @@ public interface IAddressService {
 
     /**
      * 测量距离
-     *  @param from
+     *
+     * @param from
      * @param to
      */
     public ServiceResult<GetDistanceResponse> getDistance(String from, String to);
@@ -39,5 +40,5 @@ public interface IAddressService {
     /**
      * 通过geohash获取精确位置
      */
-    public ServiceResult<GeocoderResponse> getpois(String lat, String lng);
+    public ServiceResult<GeocoderResponse> getPois(String lat, String lng);
 }

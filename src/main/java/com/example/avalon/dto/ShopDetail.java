@@ -1,9 +1,6 @@
 package com.example.avalon.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.example.avalon.entity.shop.Shop;
 
-import java.util.List;
-
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class ShopDetail {
+public class ShopDetail extends Shop {
 }

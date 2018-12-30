@@ -31,7 +31,6 @@ public class CitiesService {
     private IAddressService IAddressService;
 
 
-
     public ServiceResult<Cities> cityGuess() {
         return cityGuess(IPUtils.getIpAddress(getHttpServletRequest()));
     }
@@ -106,14 +105,14 @@ public class CitiesService {
             }
 
         } else {
-            return new ServiceResult<>(false,"cityId "+cityId+" can not be found");
+            return new ServiceResult<>(false, "cityId " + cityId + " can not be found");
         }
         log.debug("{}", poisDTOS);
         return ServiceResult.of(poisDTOS);
     }
 
     public ServiceResult<PoisHashDTO> poishash(String lat, String lng) {
-        ServiceResult<GeocoderResponse> geocoder = IAddressService.getpois(lat,lng);
+        ServiceResult<GeocoderResponse> geocoder = IAddressService.getPois(lat, lng);
         if (geocoder.isSuccess()) {
             GeocoderResponse geocoderResponse = geocoder.getResult();
             PoisHashDTO poisHashDTO = new PoisHashDTO();

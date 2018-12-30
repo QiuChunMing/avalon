@@ -13,7 +13,7 @@ import java.util.List;
 public class Category {
     @Id
     @GeneratedValue
-    private int catogoryId;
+    private int categoryId;
 
     private int id;
 

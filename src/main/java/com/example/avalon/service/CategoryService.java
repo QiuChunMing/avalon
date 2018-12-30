@@ -39,29 +39,29 @@ public class CategoryService {
         if (StringUtils.isEmpty(mainCategory) || StringUtils.isEmpty(subCategory)) {
             return ServiceResult.fail();
         }
-        log.debug("mainCategory {}",mainCategory);
-        log.debug("subCategory {}",subCategory);
+        log.debug("mainCategory {}", mainCategory);
+        log.debug("subCategory {}", subCategory);
 
         Category categoryMain = categoryRepository.findFirstByName(mainCategory);
         Category categorySub = categoryRepository.findFirstByName(subCategory);
 
-        log.debug("categoryMain {}",categoryMain);
-        log.debug("categorySub {}",categorySub);
+        log.debug("categoryMain {}", categoryMain);
+        log.debug("categorySub {}", categorySub);
         if (categoryMain == null || categorySub == null) {
             return ServiceResult.fail();
         }
         if (categorySub.getParentId() != categoryMain.getId() && categoryMain.getId() != categorySub.getId()) {
             return ServiceResult.fail();
         }
-        log.debug("{}",categoryMain.getCount());
-        log.debug("{}",categorySub.getCount());
+        log.debug("{}", categoryMain.getCount());
+        log.debug("{}", categorySub.getCount());
 
         categoryMain.setCount(categoryMain.getCount() + 1);
         categoryRepository.save(categoryMain);
 
-        if (categorySub.getId() != categoryMain.getId())  {
+        if (categorySub.getId() != categoryMain.getId()) {
             categorySub.setCount(categorySub.getCount() + 1);
-            log.debug("{},{}",categorySub.getId(),categoryMain.getId());
+            log.debug("{},{}", categorySub.getId(), categoryMain.getId());
             categoryRepository.save(categorySub);
         }
         return ServiceResult.success();
@@ -83,12 +83,12 @@ public class CategoryService {
         }
     }
 
-    private void generateTheFirstCategory(Category category,CategoryDTO categoryDTO) {
+    private void generateTheFirstCategory(Category category, CategoryDTO categoryDTO) {
         if (category.getParentId() == 0) {
             if (categoryDTO.getSub_categories() != null) {
                 CategoryDTO categoryDTO1 = new CategoryDTO();
                 BeanUtils.copyProperties(category, categoryDTO1);
-                categoryDTO1.setName("全部"+category.getName());
+                categoryDTO1.setName("全部" + category.getName());
                 categoryDTO1.setImage_url(category.getImageUrl());
                 categoryDTO1.setSub_categories(Collections.EMPTY_LIST);
 
@@ -107,7 +107,6 @@ public class CategoryService {
 
     private List<Category> getCategoriesList() {
         List<Category> allCategory = categoryRepository.findAll();
-
         List<Category> rootCategory = new ArrayList<>();
 
         //找出根种类
@@ -117,7 +116,6 @@ public class CategoryService {
             }
         }
 
-
         //递归查找根种类下的次级种类
         for (Category category : rootCategory) {
             if (category.getParentId() != category.getId()) {
@@ -125,7 +123,6 @@ public class CategoryService {
                 category.setCategory(subCategory);
             }
         }
-
         return rootCategory;
     }
 

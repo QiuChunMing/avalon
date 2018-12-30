@@ -1,5 +1,6 @@
 package com.example.avalon.dto;
 
+import com.example.avalon.entity.shop.Shop;
 import lombok.Data;
 
 @Data
@@ -8,5 +9,5 @@ public class AddShopResponse {
     private String type;
     private String message;
     private String success;
-    private ShopDetail shopDetail;
+    private Shop shop;
 }

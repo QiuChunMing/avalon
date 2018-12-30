@@ -5,9 +5,9 @@ import lombok.Data;
 import java.time.LocalDate;
 
 @Data
-public class Adress {
+public class Address {
     private int id;
-    private String adress;
+    private String address;
     private String phone;
     private int isValid;
     private LocalDate createAt;
@@ -17,12 +17,11 @@ public class Adress {
     private String stGeoHash;
     private String addressDetail;
     private int sex;
-    private int cityid;
-    private int isUserDefault;
     private int cityId;
+    private int isUserDefault;
     private String tag;
     private int isDeliverable;
     private int agentFee;
-    private int deleverAmount;
+    private int deliverAmount;
     private int phoneHadBound;
 }

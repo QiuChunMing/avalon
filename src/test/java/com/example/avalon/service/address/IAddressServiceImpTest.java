@@ -5,7 +5,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class IAddressServiceServiceImpTest extends AvalonApplicationTests {
+public class IAddressServiceImpTest extends AvalonApplicationTests {
 
     @Test
     public void guessPosition() {

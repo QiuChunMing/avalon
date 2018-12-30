@@ -1,7 +1,5 @@
 package com.example.avalon.web.admin.controller;
 
-import com.example.avalon.entity.StatisEntity;
-import com.example.avalon.service.ServiceResult;
 import com.example.avalon.service.statis.StatisService;
 import com.example.avalon.web.APIResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -26,12 +24,7 @@ public class StaticsController {
      */
     @GetMapping("/api/{date}/count")
     public APIResponse requestDateCount(@DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @PathVariable LocalDate date) {
-        log.debug("date is {}",date.toString());
-        ServiceResult<Long> requestDateCount = statisService.requestDateCount(date);
-        APIResponse apiResponse = new APIResponse();
-        apiResponse.setStatus(1);
-        apiResponse.setCount(requestDateCount.getResult());
-        return apiResponse;
+        return null;
     }
 
     /**
@@ -40,18 +33,12 @@ public class StaticsController {
      */
     @RequestMapping("api/count")
     public APIResponse requestAllCount() {
-        ServiceResult<Long> requestDateCount = statisService.requestAllCount();
-        APIResponse apiResponse = new APIResponse();
-        apiResponse.setStatus(1);
-        apiResponse.setCount(requestDateCount.getResult());
-        return apiResponse;
+        return null;
     }
 
     @RequestMapping("/api/all")
     public Iterable requestAll() {
-        ServiceResult<Iterable<StatisEntity>> requestAll = statisService.requestAll();
-        Iterable<StatisEntity> result = requestAll.getResult();
-        return result;
+        return null;
     }
 
     /**

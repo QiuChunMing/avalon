@@ -20,7 +20,7 @@ import java.util.Optional;
 
 @Slf4j
 @Component
-public class IAddressServiceServiceImp implements IAddressService {
+public class IAddressServiceImp implements IAddressService {
     @Autowired
     private AddressSuggestConfiguration configuration;
 
@@ -35,7 +35,7 @@ public class IAddressServiceServiceImp implements IAddressService {
     @Override
     public ServiceResult<GuessPositionResponse> guessPosition(String ip) {
         String searchIp = Optional.ofNullable(ip).orElse(defaultIP);
-        log.debug("searchIP is:{}",searchIp);
+        log.debug("searchIP is:{}", searchIp);
         ResponseEntity<String> responseEntity;
         for (String tencentKey : configuration.getTencentkeys()) {
 
@@ -48,8 +48,8 @@ public class IAddressServiceServiceImp implements IAddressService {
                 responseEntity = restTemplate.getForEntity(builder.toString(), String.class);
                 log.debug(responseEntity.getBody());
             } catch (RestClientException e) {
-                log.error("{} can not be fetch:{}", configuration.getGuessPositionUrl(),e.getMessage());
-                return new ServiceResult<>(false,e.getMessage());
+                log.error("{} can not be fetch:{}", configuration.getGuessPositionUrl(), e.getMessage());
+                return new ServiceResult<>(false, e.getMessage());
             }
             if (responseEntity.getStatusCode().is2xxSuccessful()) {
                 GuessPositionResponse guessPositionResponse;
@@ -71,7 +71,7 @@ public class IAddressServiceServiceImp implements IAddressService {
     @Override
     public ServiceResult<SearchPlaceResponse> searchPlace(String keyword, String cityName) {
         if (keyword.length() > 64 || keyword.length() < 1) {
-            return new ServiceResult<>(false,"cityName or keyword is not valid");
+            return new ServiceResult<>(false, "cityName or keyword is not valid");
         }
 
         for (String tencentKey : configuration.getTencentkeys()) {
@@ -86,7 +86,7 @@ public class IAddressServiceServiceImp implements IAddressService {
                         .append("page_size=").append("10");
                 url = builder.toString();
             } catch (UnsupportedEncodingException e) {
-                log.error("encode error:{} ",e.getCause());
+                log.error("encode error:{} ", e.getCause());
                 return new ServiceResult<>(false, e.getMessage());
             }
 
@@ -103,7 +103,7 @@ public class IAddressServiceServiceImp implements IAddressService {
                 try {
                     searchPlaceResponse = objectMapper.readValue(responseEntity.getBody(), SearchPlaceResponse.class);
                     if (searchPlaceResponse.getMessage().contains("key")) {
-                        log.warn("key {} ",tencentKey);
+                        log.warn("key {} ", tencentKey);
                         continue;
                     }
                     return ServiceResult.of(searchPlaceResponse);
@@ -134,7 +134,7 @@ public class IAddressServiceServiceImp implements IAddressService {
                 responseEntity = restTemplate.getForEntity(builder.toString(), String.class);
             } catch (RestClientException e) {
                 log.error("{} can not be fetched:", configuration.getGetDistanceUrl());
-                return new ServiceResult<>(false,e.getMessage());
+                return new ServiceResult<>(false, e.getMessage());
             }
             if (responseEntity.getStatusCode().is2xxSuccessful()) {
                 GetDistanceResponse distanceResponse = null;
@@ -173,23 +173,24 @@ public class IAddressServiceServiceImp implements IAddressService {
 
         GuessPositionResponse positionResponseServiceResultResult = positionResponseServiceResult.getResult();
         if (positionResponseServiceResultResult.getStatus() != 0) {
-            log.warn("ip:{} 无法定位 :{}",ip,positionResponseServiceResultResult.getMessage());
-            return new ServiceResult<>(false,"");
+            log.warn("ip:{} 无法定位 :{}", ip, positionResponseServiceResultResult.getMessage());
+            return new ServiceResult<>(false, "");
         }
         lat = positionResponseServiceResultResult.getResult().getLocation().getLat();
         lng = positionResponseServiceResultResult.getResult().getLocation().getLng();
 
-        return getpois(String.valueOf(lat), String.valueOf(lng));
+        return getPois(String.valueOf(lat), String.valueOf(lng));
     }
 
     /**
      * 根据经纬度查询位置
+     *
      * @param lat
      * @param lng
      * @return
      */
     @Override
-    public ServiceResult<GeocoderResponse> getpois(String lat, String lng) {
+    public ServiceResult<GeocoderResponse> getPois(String lat, String lng) {
 
         for (String tencentKey : configuration.getTencentkeys()) {
 
@@ -205,13 +206,13 @@ public class IAddressServiceServiceImp implements IAddressService {
                 log.debug(responseEntity.getBody());
             } catch (RestClientException e) {
                 log.warn("{} can not be fetched::", configuration.getGeocoderUrl());
-                return new ServiceResult<>(false,e.getMessage());
+                return new ServiceResult<>(false, e.getMessage());
             }
             GeocoderResponse response;
             try {
                 response = objectMapper.readValue(responseEntity.getBody(), GeocoderResponse.class);
                 if (response.getMessage().contains("key")) {
-                    log.warn("key 失效 {}",response.getMessage());
+                    log.warn("key 失效 {}", response.getMessage());
                     continue;
                 }
                 return ServiceResult.of(response);
@@ -219,6 +220,6 @@ public class IAddressServiceServiceImp implements IAddressService {
                 log.error("getpois objectMapper convert error");
             }
         }
-        return new ServiceResult<>(false,"httpStatusCode isNot2xxSuccessful");
+        return new ServiceResult<>(false, "httpStatusCode isNot2xxSuccessful");
     }
 }

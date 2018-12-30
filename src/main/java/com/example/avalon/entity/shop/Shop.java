@@ -1,15 +1,16 @@
 package com.example.avalon.entity.shop;
 
+import com.example.avalon.entity.Category;
 import lombok.Data;
+import lombok.ToString;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Data
+@ToString
 public class Shop {
     public Shop() {
     }
@@ -39,8 +40,21 @@ public class Shop {
     private int recentOrderNum;
     private int status;
     private String openHours;
-    @Transient
-    private List<Activities> activities;
-    @Transient
+
+    @ManyToMany(targetEntity = Activities.class, cascade = CascadeType.ALL)
+    @JoinTable(name = "shop_activities"
+            , joinColumns = {@JoinColumn(name = "shop_id"
+            , referencedColumnName = "id")})
+    private Set<Activities> activities;
+
+    @OneToOne(targetEntity = Identification.class, cascade = CascadeType.ALL)
     private Identification identification;
+
+    @ManyToMany(targetEntity = Supports.class, cascade = CascadeType.ALL)
+    @JoinTable(name = "shop_supports"
+            , joinColumns = {@JoinColumn(name = "shop_id"
+            , referencedColumnName = "id")})
+    private Set<Supports> supports;
+
+    private String category;
 }

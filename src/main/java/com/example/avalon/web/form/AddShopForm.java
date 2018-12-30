@@ -1,6 +1,7 @@
 package com.example.avalon.web.form;
 
 
+import com.example.avalon.entity.shop.Activities;
 import lombok.Data;
 
 import javax.validation.constraints.NotEmpty;
@@ -9,15 +10,51 @@ import java.util.List;
 @Data
 public class AddShopForm {
 
+    /*
+    {
+    "name":"xiao",
+    "address":"上海市宝山区上大路99号",
+    "latitude":31.31601,
+    "longitude":121.393402,
+    "description":"",
+    "phone":155,
+    "promotion_info":"",
+    "float_delivery_fee":5,
+    "float_minimum_order_amount":20,
+    "is_premium":true,
+    "delivery_mode":true,
+    "new":true,
+    "bao":true,
+    "zhun":true,
+    "piao":true,
+    "startTime":"05:45",
+    "endTime":"06:00",
+    "image_path":"167ff1691b91.png",
+    "business_license_image":"167ff1695322.png",
+    "catering_service_license_image":"167ff16ba1d3.png",
+    "activities":[
+        {
+            "icon_name":"减",
+            "name":"满减优惠",
+            "description":"满30减5，满60减8"
+        },
+        {
+            "icon_name":"新",
+            "name":"新用户立减",
+            "description":"郭德纲"
+        }
+    ],
+    "category":"快餐便当"
+}
+     */
 
-    @NotEmpty
     private String name;
-    @NotEmpty
     private String address;
     private String description;
+    private String latitude;
+    private String longitude;
     //运费
     private int floatDeliveryFee;
-//    @NotEmpty
     private String phone;
     //起送价
     private int floatMinimumOrderAmount;
@@ -28,10 +65,7 @@ public class AddShopForm {
     private boolean bao;
     private boolean zhun;
     private boolean piao;
-//    @NotEmpty
-    private String latitude;
-//    @NotEmpty
-    private String longitude;
+
     private String startTime;
     private String endTime;
     private String promotionInfo;
@@ -41,6 +75,6 @@ public class AddShopForm {
     private String businessLicenseImage;
     private String cateringServiceLicenseImage;
     //商铺活动：示例：[{icon_name:'新', name:'新用户立减', description: ''}]
-    private List<String> activities;
+    private List<Activities> activities;
 
 }
