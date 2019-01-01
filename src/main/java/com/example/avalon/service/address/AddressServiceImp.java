@@ -1,26 +1,30 @@
 package com.example.avalon.service.address;
 
+import com.example.avalon.service.ServiceResult;
 import com.example.avalon.service.address.response.GeocoderResponse;
 import com.example.avalon.service.address.response.GetDistanceResponse;
 import com.example.avalon.service.address.response.GuessPositionResponse;
 import com.example.avalon.service.address.response.SearchPlaceResponse;
-import com.example.avalon.service.ServiceResult;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
 @Component
-public class IAddressServiceImp implements IAddressService {
+public class AddressServiceImp implements IAddressService {
     @Autowired
     private AddressSuggestConfiguration configuration;
 
@@ -113,11 +117,44 @@ public class IAddressServiceImp implements IAddressService {
                 }
             }
         }
+
         return new ServiceResult<>(false, "httpStatusCode isNot2xxSuccessful");
     }
 
     @Override
+    public ServiceResult<List<SimpleDistanceResponse>> getSimpleDistance(String from, String to) {
+        ServiceResult<GetDistanceResponse> distance = this.getDistance(from, to);
+        try {
+            log.debug(objectMapper.writeValueAsString(distance));
+        } catch (JsonProcessingException e) {
+            log.error(e.getMessage());
+        }
+        if (!distance.isSuccess()) {
+            return new ServiceResult<>(false, distance.getMessage());
+        }
+        List<SimpleDistanceResponse> simpleAddressResponses = new ArrayList<>();
+
+        try {
+            for (GetDistanceResponse.ResultBean resultBean : distance.getResult().getResult()) {
+                SimpleDistanceResponse distanceResponse
+                        = new SimpleDistanceResponse();
+                distanceResponse.setDistance(resultBean.getDistance().getText());
+                distanceResponse.setOrderLeadTime(resultBean.getDuration().getText());
+                simpleAddressResponses.add(distanceResponse);
+            }
+        } catch (Exception e) {
+            log.warn("获取数据异常");
+            return new ServiceResult<>(false, "参数异常");
+        }
+        return ServiceResult.of(simpleAddressResponses);
+    }
+
+    @Override
     public ServiceResult<GetDistanceResponse> getDistance(String from, String to) {
+
+        if (StringUtils.isEmpty(from)||StringUtils.isEmpty(to)) {
+            return new ServiceResult<>(false, "参数不能为空");
+        }
 
         log.info("baiduKey is:{}", configuration.getBaiduKeys());
         log.info("searchPlaceUrl is:{}", configuration.getGetDistanceUrl());
@@ -127,7 +164,7 @@ public class IAddressServiceImp implements IAddressService {
             builder.append(configuration.getGetDistanceUrl()).append("?")
                     .append("ak=").append(baiduKey).append("&")
                     .append("output=").append("json").append("&")
-                    .append("origins=").append(from)
+                    .append("origins=").append(from).append("&")
                     .append("destinations=").append(to);
             ResponseEntity<String> responseEntity;
             try {
@@ -147,6 +184,7 @@ public class IAddressServiceImp implements IAddressService {
                     log.error("objectMapper convert error:{}", e.getMessage());
                     e.printStackTrace();
                 }
+
                 return ServiceResult.of(distanceResponse);
             }
         }
@@ -221,5 +259,27 @@ public class IAddressServiceImp implements IAddressService {
             }
         }
         return new ServiceResult<>(false, "httpStatusCode isNot2xxSuccessful");
+    }
+
+    @Override
+    public ServiceResult<List<SimpleAddressResponse>> AddressSuggest(String key, String cityName) {
+        ServiceResult<SearchPlaceResponse> serviceResult = this.searchPlace(key, cityName);
+        if (!serviceResult.isSuccess()) {
+            return new ServiceResult<>(false, serviceResult.getMessage());
+        }
+        List<SearchPlaceResponse.DataBean> data = serviceResult.getResult().getData();
+        List<SimpleAddressResponse> simpleAddressResponses = new ArrayList<>();
+        for (SearchPlaceResponse.DataBean dataBean : data) {
+            SimpleAddressResponse response = new SimpleAddressResponse();
+            response.setAddress(dataBean.getAddress());
+            response.setName(dataBean.getTitle());
+            response.setLatitude(dataBean.getLocation().getLat());
+            response.setLongitude(dataBean.getLocation().getLng());
+            response.setGeohash(dataBean.getLocation().getLat()
+                    + "," + dataBean.getLocation().getLng());
+            simpleAddressResponses.add(response);
+        }
+
+        return ServiceResult.of(simpleAddressResponses);
     }
 }
