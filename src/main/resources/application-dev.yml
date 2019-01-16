@@ -1,0 +1,36 @@
+---
+spring:
+  jackson:
+    serialization:
+      indent_output: true
+  datasource:
+    password: root
+    tomcat:
+      test-on-borrow: true
+      max-active: 50
+      max-wait: 10000
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/test?useSSL=false
+    username: root
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create
+  freemarker:
+    enabled: true
+
+server:
+  port: 8080
+  servlet:
+    context-path: /sell
+
+
+logging:
+  level:
+    com:
+      example:
+        avalon: debug
+qiniu:
+  bucket: image-store
+  secret-key: jCpU8AxV-O91YwQGqLmmtwdVivnepo91ZuTZiobs
+  access-key: AFUkkjnipVwtqDZaLqXz2q02sg5747wyIkJ_283O

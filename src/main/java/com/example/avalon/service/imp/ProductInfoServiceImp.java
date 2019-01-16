@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -41,6 +42,7 @@ public class ProductInfoServiceImp implements IProductInfoService {
 
     @Override
     public ProductInfo save(ProductInfo productInfo) {
+        productInfo.setUpdateTime(LocalDate.now());
         return infoRepository.save(productInfo);
 
     }
@@ -89,6 +91,7 @@ public class ProductInfoServiceImp implements IProductInfoService {
 
         //更新
         productInfo.setProductStatus(ProductStatus.UP.getCode());
+        productInfo.setUpdateTime(LocalDate.now());
         return infoRepository.save(productInfo);
     }
 
@@ -104,6 +107,7 @@ public class ProductInfoServiceImp implements IProductInfoService {
 
         //更新
         productInfo.setProductStatus(ProductStatus.DOWN.getCode());
+        productInfo.setUpdateTime(LocalDate.now());
         return infoRepository.save(productInfo);
     }
 }

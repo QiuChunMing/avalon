@@ -1,6 +1,5 @@
 package com.example.avalon.security;
 
-import com.example.avalon.web.APIResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.AuthenticationException;
@@ -23,7 +22,7 @@ public class UrlEntryPoint extends LoginUrlAuthenticationEntryPoint {
     }
 
     /**
-     * 发生AccessDeniedException后已登录将会调用此方法，即访问自身无权限访问的资源
+     * 发生AccessDeniedException后(即访问自身无权限访问的资源)已登录将会调用此方法，
      *
      * @param request
      * @param response
@@ -33,12 +32,6 @@ public class UrlEntryPoint extends LoginUrlAuthenticationEntryPoint {
      */
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
-        response.setContentType(CONTENT_TYPE);
-        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-        APIResponse apiResponse = new APIResponse();
-        apiResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
-        apiResponse.setType(APIResponse.Type.SC_FORBIDDEN.getType());
-        objectMapper.writeValue(response.getWriter(), apiResponse);
-        super.commence(request, response, authException);
+
     }
 }

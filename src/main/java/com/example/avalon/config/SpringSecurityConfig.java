@@ -17,23 +17,28 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private APIAuthenticationFailureHandler apiAuthenticationFailureHandler;
 
+    @Autowired
+    private JsonLoginSecurityConfig jsonLoginSecurityConfig;
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.formLogin()
-                .and()
-                .authorizeRequests()
+        http.authorizeRequests()
                 .antMatchers("/admin/login").permitAll()
                 .antMatchers("/login").permitAll()
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 .antMatchers("/add").permitAll()
                 .anyRequest().authenticated()
+                .anyRequest().permitAll()
                 .and()
                 .formLogin()
-                .loginProcessingUrl("/login")
+                .loginProcessingUrl("/admin/login")
                 .successHandler(apiAuthenticationSuccessHandler)
                 .failureHandler(apiAuthenticationFailureHandler);
         http.csrf().disable();
+        //同源策略
+        http.headers().frameOptions().sameOrigin();
 
+        http.apply(jsonLoginSecurityConfig);
     }
 
     @Override
@@ -42,6 +47,5 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         auth.inMemoryAuthentication().passwordEncoder(
                 new BCryptPasswordEncoder()).withUser("root").password(new BCryptPasswordEncoder()
                 .encode("root")).roles("ADMIN");
-
     }
 }
