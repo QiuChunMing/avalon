@@ -11,34 +11,26 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @EnableWebSecurity
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
-    @Autowired
-    private APIAuthenticationSuccessHandler apiAuthenticationSuccessHandler;
 
-    @Autowired
-    private APIAuthenticationFailureHandler apiAuthenticationFailureHandler;
-
-    @Autowired
-    private JsonLoginSecurityConfig jsonLoginSecurityConfig;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/admin/login").permitAll()
-                .antMatchers("/login").permitAll()
-                .antMatchers("/admin/**").hasRole("ADMIN")
-                .antMatchers("/add").permitAll()
+                .antMatchers("/seller/login").permitAll()
+                .antMatchers("/seller/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .anyRequest().permitAll()
                 .and()
                 .formLogin()
-                .loginProcessingUrl("/admin/login")
-                .successHandler(apiAuthenticationSuccessHandler)
-                .failureHandler(apiAuthenticationFailureHandler);
+                .loginPage("/seller/login")
+                .loginProcessingUrl("/authentication/form")
+                .defaultSuccessUrl("/seller/order/list")
+                .and()
+        ;
         http.csrf().disable();
         //同源策略
         http.headers().frameOptions().sameOrigin();
 
-        http.apply(jsonLoginSecurityConfig);
     }
 
     @Override

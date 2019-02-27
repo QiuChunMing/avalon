@@ -1,6 +1,7 @@
-package com.example.avalon.utils.upload;
+package com.example.avalon.utils;
 
 import com.example.avalon.AvalonApplicationTests;
+import com.example.avalon.utils.upload.UploadManagerImp;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,6 @@ public class UploadManagerImpTest extends AvalonApplicationTests {
 
     @Test
     public void upload() {
-
 
     }
 

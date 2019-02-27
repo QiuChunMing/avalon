@@ -1,13 +1,11 @@
 package com.example.avalon.entity;
 
-import com.example.avalon.enums.PayStatusEnum;
-import com.example.avalon.enums.ProductStatus;
+import com.example.avalon.enums.ProductStatusEnum;
 import lombok.Data;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Set;
 
 @Entity
 @Data
@@ -45,7 +43,7 @@ public class ProductInfo {
      * 0 正常
      * 1 下架
      */
-    private Integer productStatus = ProductStatus.UP.getCode();
+    private Integer productStatus = ProductStatusEnum.UP.getCode();
 
     /**
      * 类目编号
@@ -62,7 +60,7 @@ public class ProductInfo {
      */
     private LocalDate updateTime;
 
-    public ProductStatus getProductStatus() {
-        return EnumUtil.getByCode(productStatus, ProductStatus.class);
+    public ProductStatusEnum getProductStatus() {
+        return EnumUtil.getByCode(productStatus, ProductStatusEnum.class);
     }
 }

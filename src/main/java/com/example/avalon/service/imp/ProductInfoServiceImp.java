@@ -2,7 +2,7 @@ package com.example.avalon.service.imp;
 
 import com.example.avalon.dto.CartDTO;
 import com.example.avalon.entity.ProductInfo;
-import com.example.avalon.enums.ProductStatus;
+import com.example.avalon.enums.ProductStatusEnum;
 import com.example.avalon.enums.ResultEnum;
 import com.example.avalon.exception.SellException;
 import com.example.avalon.repository.ProductInfoRepository;
@@ -31,7 +31,7 @@ public class ProductInfoServiceImp implements IProductInfoService {
 
     @Override
     public List<ProductInfo> findUpAll() {
-        return infoRepository.findByProductStatus(ProductStatus.UP.getCode());
+        return infoRepository.findByProductStatus(ProductStatusEnum.UP.getCode());
 
     }
 
@@ -85,12 +85,12 @@ public class ProductInfoServiceImp implements IProductInfoService {
         if (productInfo == null) {
             throw new SellException(ResultEnum.PRODUCT_NOT_EXIST);
         }
-        if (productInfo.getProductStatus() == ProductStatus.UP) {
+        if (productInfo.getProductStatus() == ProductStatusEnum.UP) {
             throw new SellException(ResultEnum.PRODUCT_STATUS_ERROR);
         }
 
         //更新
-        productInfo.setProductStatus(ProductStatus.UP.getCode());
+        productInfo.setProductStatus(ProductStatusEnum.UP.getCode());
         productInfo.setUpdateTime(LocalDate.now());
         return infoRepository.save(productInfo);
     }
@@ -101,12 +101,12 @@ public class ProductInfoServiceImp implements IProductInfoService {
         if (productInfo == null) {
             throw new SellException(ResultEnum.PRODUCT_NOT_EXIST);
         }
-        if (productInfo.getProductStatus() == ProductStatus.DOWN) {
+        if (productInfo.getProductStatus() == ProductStatusEnum.DOWN) {
             throw new SellException(ResultEnum.PRODUCT_STATUS_ERROR);
         }
 
         //更新
-        productInfo.setProductStatus(ProductStatus.DOWN.getCode());
+        productInfo.setProductStatus(ProductStatusEnum.DOWN.getCode());
         productInfo.setUpdateTime(LocalDate.now());
         return infoRepository.save(productInfo);
     }

@@ -43,14 +43,6 @@ public class orderServiceImp implements IOrderService {
     @Autowired
     private IProductInfoService productInfoService;
 
-//        @Autowired
-//        private PayService payService;
-//
-//        @Autowired
-//        private PushMessageService pushMessageService;
-//
-//        @Autowired
-//        private WebSocket webSocket;
 
     /**
      * 创建订单
@@ -185,7 +177,6 @@ public class orderServiceImp implements IOrderService {
 
         //如果已支付, 需要退款
         if (orderDTO.getPayStatus().equals(PayStatusEnum.SUCCESS.getCode())) {
-//                payService.refund(orderDTO);
         }
 
         return orderDTO;
